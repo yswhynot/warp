@@ -358,11 +358,11 @@ def CreateSimRenderer(renderer):
 
                 for m in range(self.model.muscle_count):
                     start = int(muscle_start[m])
-                    end = int(muscle_start[m + 1])
+                    end = int(muscle_links[start + 1])
 
                     points = []
 
-                    for w in range(start, end):
+                    for w in [start, end]:
                         link = muscle_links[w]
                         point = muscle_points[w]
 

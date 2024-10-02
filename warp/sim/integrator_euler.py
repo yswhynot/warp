@@ -1599,6 +1599,7 @@ def compute_muscle_force(
     body_com: wp.array(dtype=wp.vec3),
     muscle_links: wp.array(dtype=int),
     muscle_points: wp.array(dtype=wp.vec3),
+    muscle_params: wp.array(dtype=float),
     muscle_activation: float,
     body_f_s: wp.array(dtype=wp.spatial_vector),
 ):
@@ -1620,7 +1621,13 @@ def compute_muscle_force(
     n = wp.normalize(pos_1 - pos_0)
 
     # todo: add passive elastic and viscosity terms
-    f = n * muscle_activation
+    lt = muscle_params[2]
+    f = n * muscle_activation * 0.0
+    pos_dis = wp.length(pos_1 - pos_0)
+    if pos_dis > lt:
+        f = n * (pos_dis - lt) * 1e4 # using it as a scale for now
+    # wp.printf("pos_dis: %f\n", pos_dis)
+    # print(f)
 
     wp.atomic_sub(body_f_s, link_0, wp.spatial_vector(f, wp.cross(pos_0, f)))
     wp.atomic_add(body_f_s, link_1, wp.spatial_vector(f, wp.cross(pos_1, f)))
@@ -1643,12 +1650,13 @@ def eval_muscles(
     tid = wp.tid()
 
     m_start = muscle_start[tid]
-    m_end = muscle_start[tid + 1] - 1
+    # m_end = muscle_start[tid + 1] - 1
+    m_end = muscle_links[m_start + 1]
 
     activation = muscle_activation[tid]
 
     for i in range(m_start, m_end):
-        compute_muscle_force(i, body_X_s, body_v_s, body_com, muscle_links, muscle_points, activation, body_f_s)
+        compute_muscle_force(i, body_X_s, body_v_s, body_com, muscle_links, muscle_points, muscle_params, activation, body_f_s)
 
 
 def eval_spring_forces(model: Model, state: State, particle_f: wp.array):

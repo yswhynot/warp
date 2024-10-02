@@ -2693,14 +2693,15 @@ class ModelBuilder:
 
         n = len(bodies)
 
-        self.muscle_start.append(len(self.muscle_bodies))
         self.muscle_params.extend([f0, lm, lt, lmax, pen])
         # self.muscle_params.append((f0, lm, lt, lmax, pen))
-        self.muscle_activations.append(0.0)
 
         for i in range(n):
+            if i != n-1: 
+                self.muscle_start.append(bodies[i])
             self.muscle_bodies.append(bodies[i])
             self.muscle_points.append(positions[i])
+            self.muscle_activations.append(1.0)
 
         # return the index of the muscle
         return len(self.muscle_start) - 1
