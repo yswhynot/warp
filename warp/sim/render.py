@@ -344,7 +344,7 @@ def CreateSimRenderer(renderer):
                 muscle_start = self.model.muscle_start.numpy()
                 muscle_links = self.model.muscle_bodies.numpy()
                 muscle_points = self.model.muscle_points.numpy()
-                muscle_activation = self.model.muscle_activation.numpy()
+                muscle_activation = self.model.muscle_activations.numpy()
 
                 # for s in self.skeletons:
 
@@ -366,9 +366,12 @@ def CreateSimRenderer(renderer):
                         link = muscle_links[w]
                         point = muscle_points[w]
 
-                        X_sc = wp.transform_expand(body_q[link][0])
+                        # X_sc = wp.transform_expand(body_q[link][0])
+                        # points.append(wp.transform_point(X_sc, point).tolist())
 
-                        points.append(wp.transform_point(X_sc, point).tolist())
+                        X_sc = wp.transform_expand(body_q[link])
+                        points.append(wp.transform_point(X_sc, point))
+
 
                     self.render_line_strip(
                         name=f"muscle_{m}", vertices=points, radius=0.0075, color=(muscle_activation[m], 0.2, 0.5)

@@ -1632,6 +1632,7 @@ def eval_muscles(
     body_v_s: wp.array(dtype=wp.spatial_vector),
     body_com: wp.array(dtype=wp.vec3),
     muscle_start: wp.array(dtype=int),
+    # muscle_params: wp.array(dtype=float),
     muscle_params: wp.array(dtype=float),
     muscle_links: wp.array(dtype=int),
     muscle_points: wp.array(dtype=wp.vec3),
@@ -1910,7 +1911,7 @@ def compute_forces(model: Model, state: State, control: Control, particle_f: wp.
     eval_particle_body_contact_forces(model, state, particle_f, body_f, body_f_in_world_frame=False)
 
     # muscles
-    if False:
+    if True:
         eval_muscle_forces(model, state, control, body_f)
 
 

@@ -2694,7 +2694,8 @@ class ModelBuilder:
         n = len(bodies)
 
         self.muscle_start.append(len(self.muscle_bodies))
-        self.muscle_params.append((f0, lm, lt, lmax, pen))
+        self.muscle_params.extend([f0, lm, lt, lmax, pen])
+        # self.muscle_params.append((f0, lm, lt, lmax, pen))
         self.muscle_activations.append(0.0)
 
         for i in range(n):
